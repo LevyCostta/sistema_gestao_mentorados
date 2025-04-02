@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User 
 from django.contrib.messages import constants
 from django.contrib import messages
+from django.contrib.auth import authenticate
+from django.contrib import auth
 
 
 # Create your views here.
@@ -36,3 +38,15 @@ def cadastro(request):
 def login(request):
     if request.method == 'GET':
         return render(request, 'login.html')
+    elif request.method == 'POST':
+        username = request.POST.get('username')
+        senha = request.POST.get('senha')
+
+        user = authenticate(username=username, password=senha)
+
+        if user is not None:
+            auth.login(request, user)
+            return redirect('/mentorados/')
+        else:
+            messages.add_message(request, messages.ERROR, 'Usuario ou senha incorretos!')
+            return redirect('/usuarios/login')
