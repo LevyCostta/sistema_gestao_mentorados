@@ -32,3 +32,7 @@ def cadastro(request):
             password = senha,
         )
         return redirect('/usuarios/login')
+    
+def login(request):
+    if request.method == 'GET':
+        return render(request, 'login.html')
