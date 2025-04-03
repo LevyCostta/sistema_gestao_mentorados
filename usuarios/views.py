@@ -43,10 +43,10 @@ def login(request):
         senha = request.POST.get('senha')
 
         user = authenticate(username=username, password=senha)
-
-        if user is not None:
+        
+        if user:
             auth.login(request, user)
-            return redirect('/mentorados/')
-        else:
-            messages.add_message(request, messages.ERROR, 'Usuario ou senha incorretos!')
-            return redirect('/usuarios/login')
+            return redirect('/mentorados/') 
+        
+        messages.add_message(request, constants.ERROR, 'Username ou senha inválidos')
+        return redirect('login')

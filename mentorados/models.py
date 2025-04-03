@@ -11,9 +11,9 @@ class Navigators(models.Model):
 
 class Mentorados(models.Model):
     estagio_choices = (
-        ('E1', '10 - 100K'),
-        ('E2', '101 - 500K'),
-        ('E3', '501 - 1KK'),
+        ('E1', '10k - 100K'),
+        ('E2', '101k - 500K'),
+        ('E3', '501k - 1KK'),
         ('E4', '1KK+')
     )
     nome = models.CharField(max_length=100)
