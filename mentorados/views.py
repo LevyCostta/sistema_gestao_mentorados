@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from .models import Mentorados, Navigators, DisponibilidadeDeHorarios
 from django.contrib import messages
 from django.contrib.messages import constants
-from datetime import datetime
+from datetime import datetime, timedelta
 # Create your views here.
 
 def mentorados(request):
@@ -50,8 +50,18 @@ def reunioes(request):
         data = request.POST.get('data')
         data = datetime.strptime(data, '%Y-%m-%dT%H:%M')
 
+        disponibilidades = DisponibilidadeDeHorarios.objects.filter(mentor = request.user).filter(
+            data_inicial__gte=(data - timedelta(minutes=50 )),
+            data_inicial__lt=(data + timedelta(minutes=50 )),
+        )
+
+        if disponibilidades.exists():
+            messages.add_message(request, constants.ERROR, 'Já existe uma reunião em aberto.')
+            return redirect('reunioes')
+
+
         disponibilidades = DisponibilidadeDeHorarios(data_inicial=data, mentor =request.user)
         disponibilidades.save()
 
-
-        return HttpResponse(data)
+        messages.add_message(request, constants.SUCCESS, 'Reunião marcada com sucesso!')
+        return redirect('reunioes')
