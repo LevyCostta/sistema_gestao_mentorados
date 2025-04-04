@@ -16,6 +16,9 @@ class Mentorados(models.Model):
         ('E3', '501k - 1KK'),
         ('E4', '1KK+')
     )
+
+
+
     nome = models.CharField(max_length=100)
     foto = models.ImageField(upload_to='fotos', null=True, blank=True)
     estagio = models.CharField(max_length=2 , choices=estagio_choices)
