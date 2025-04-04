@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Mentorados, Navigators
+from .models import Mentorados, Navigators, DisponibilidadeDeHorarios
 from django.contrib import messages
 from django.contrib.messages import constants
+from datetime import datetime
 # Create your views here.
 
 def mentorados(request):
@@ -41,3 +42,16 @@ def mentorados(request):
 
         messages.add_message(request, constants.SUCCESS, 'Mentorado cadastrado com sucesso.')
         return redirect('mentorados')
+    
+def reunioes(request):
+    if request.method == 'GET':
+        return render(request, 'reunioes.html')
+    elif request.method == 'POST':
+        data = request.POST.get('data')
+        data = datetime.strptime(data, '%Y-%m-%dT%H:%M')
+
+        disponibilidades = DisponibilidadeDeHorarios(data_inicial=data, mentor =request.user)
+        disponibilidades.save()
+
+
+        return HttpResponse(data)
