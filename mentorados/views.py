@@ -65,3 +65,7 @@ def reunioes(request):
 
         messages.add_message(request, constants.SUCCESS, 'Reunião marcada com sucesso!')
         return redirect('reunioes')
+
+def auth(request):
+    if request.method == 'GET':
+        return render(request, 'auth_mentorado.html')
