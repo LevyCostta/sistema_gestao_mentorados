@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import timedelta
+import secrets
 # Create your models here.
 
 class Navigators(models.Model):
@@ -26,6 +27,18 @@ class Mentorados(models.Model):
     navigator = models.ForeignKey(Navigators, null=True, blank=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     criado_em = models.DateField(auto_now_add=True)
+    token = models.CharField(max_length=16)
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = self.gerar_token_unico()
+        super().save(*args, **kwargs)
+
+    def gerar_token_unico(self):
+        while True:
+            token = secrets.token_urlsafe(8)
+            if not Mentorados.objects.filter(token=token).exists():
+                return token
 
     def __str__(self):
         return self.nome
