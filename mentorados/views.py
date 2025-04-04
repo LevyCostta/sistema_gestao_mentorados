@@ -4,6 +4,7 @@ from .models import Mentorados, Navigators, DisponibilidadeDeHorarios
 from django.contrib import messages
 from django.contrib.messages import constants
 from datetime import datetime, timedelta
+from .auth import valida_token
 # Create your views here.
 
 def mentorados(request):
@@ -79,4 +80,12 @@ def auth(request):
         response = redirect('escolher_dia')
         response.set_cookie('auth_token', token, max_age=3600)
         return response
-
+    
+def escolher_dia(request):
+    if not request.COOKIES.get('auth_token'):
+        return redirect('auth_mentorado')
+        
+    if request.method == 'GET':
+        return render(request, 'escolher_dia.html')
+    
+    
