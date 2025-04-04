@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from datetime import datetime, timedelta
 from .auth import valida_token
+import locale
 # Create your views here.
 
 def mentorados(request):
@@ -80,12 +81,35 @@ def auth(request):
         response = redirect('escolher_dia')
         response.set_cookie('auth_token', token, max_age=3600)
         return response
-    
+
+locale.setlocale(locale.LC_TIME, 'portuguese')   
 def escolher_dia(request):
     if not request.COOKIES.get('auth_token'):
         return redirect('auth_mentorado')
         
     if request.method == 'GET':
-        return render(request, 'escolher_dia.html')
+        mentorado= valida_token(request.COOKIES.get('auth_token'))
+
+        disponibilidades = DisponibilidadeDeHorarios.objects.filter(
+            data_inicial__gte=datetime.now(),
+            agendado = False,
+            mentor=mentorado.user
+        ).values_list('data_inicial',flat=True)
+
+        datas = []
+        for i in disponibilidades:
+            data_formatada = i.date()
+            dia_da_semana = data_formatada.strftime('%A').capitalize()  # Dia da semana
+            mes = data_formatada.strftime('%B').capitalize()  # Mês
+            data_completa = data_formatada.strftime('%d-%m-%Y')  # Data completa para exibição
+            datas.append((dia_da_semana, mes, data_completa))
+            
+
+        return render(request, 'escolher_dia.html',{'horarios':list(set(datas))})
     
-    
+def agendar_reuniao(request):
+    if not request.COOKIES.get('auth_token'):
+        return redirect('auth_mentorado')
+        
+    if request.method == 'GET':
+        return render(request, 'agendar_reuniao.html')
