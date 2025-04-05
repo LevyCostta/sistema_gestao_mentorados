@@ -36,7 +36,9 @@ Antes de começar, você precisará ter o seguinte instalado em sua máquina:
 2. Crie um ambiente virtual (opcional, mas recomendado):
 
    python -m venv venv
+   
    source venv/bin/activate  # Para Linux/Mac
+   
    venv\Scripts\activate  # Para Windows
 
 4. Instale as dependências:
