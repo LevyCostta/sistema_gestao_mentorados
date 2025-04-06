@@ -6,12 +6,11 @@ from django.contrib.messages import constants
 from datetime import datetime, timedelta
 from .auth import valida_token
 import locale
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+@login_required
 def mentorados(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-
 
     if request.method == 'GET':
         navigators = Navigators.objects.filter(user=request.user)
