@@ -205,4 +205,3 @@ def tarefa_alterar(request, id):
 
     tarefa.realizada = not tarefa.realizada
     tarefa.save()
-    return HttpResponse('test')
