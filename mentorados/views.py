@@ -113,8 +113,6 @@ def agendar_reuniao(request):
     
     mentorado = valida_token(request.COOKIES.get('auth_token'))
 
-    #TODO: Validar se o horario agendado é realmente de um mentor do mentorado
-
     if request.method == 'GET':
         data = request.GET.get("data")
         # Tenta converter a data
@@ -135,6 +133,13 @@ def agendar_reuniao(request):
         horario_id = request.POST.get('horario')
         tag = request.POST.get('tag')
         descricao = request.POST.get('descricao')
+
+        # TODO: Validar se o horario agendado é realmente de um mentor do mentorado
+        horario = DisponibilidadeDeHorarios.objects.get(id=horario_id)
+        if horario.mentor!= mentorado.user:
+            messages.add_message(request, constants.ERROR, 'Este horário não pertence ao seu mentor.')
+
+            return redirect('escolher_dia')
 
         reuniao = Reuniao(
             data_id = horario_id,
