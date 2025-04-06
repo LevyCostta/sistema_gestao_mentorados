@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
-from .models import Mentorados, Navigators, DisponibilidadeDeHorarios, Reuniao, Tarefa
+from .models import Mentorados, Navigators, DisponibilidadeDeHorarios, Reuniao, Tarefa, Upload
 from django.contrib import messages
 from django.contrib.messages import constants
 from datetime import datetime, timedelta
@@ -163,7 +163,8 @@ def tarefa(request, id):
     
     if request.method == 'GET':
         tarefas = Tarefa.objects.filter(mentorado=mentorado)
-        return render(request, 'tarefa.html', {'mentorado': mentorado, 'tarefas': tarefas})
+        videos = Upload.objects.filter(mentorado=mentorado)
+        return render(request, 'tarefa.html', {'mentorado': mentorado, 'tarefas': tarefas, 'videos': videos})
     
     else:
         tarefa = request.POST.get('tarefa')
@@ -174,3 +175,16 @@ def tarefa(request, id):
         )
         tarefa.save()
         return redirect(f'/mentorados/tarefa/{id}')
+    
+def upload(request, id):
+    mentorado = Mentorados.objects.get(id=id)
+    if mentorado.user!= request.user:
+        raise Http404
+    
+    video = request.FILES.get('video')
+    upload = Upload(
+        mentorado = mentorado,
+        video = video
+    )
+    upload.save()
+    return redirect(f'/mentorados/tarefa/{id}')
