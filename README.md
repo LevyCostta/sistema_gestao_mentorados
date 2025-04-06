@@ -41,25 +41,26 @@ Antes de começar, você precisará ter o seguinte instalado em sua máquina:
    
    venv\Scripts\activate  # Para Windows
 
-4. Instale as dependências:
 
-  pip install -r requirements.txt
-
-4. Execute as migrações do banco de dados:
+3. Execute as migrações do banco de dados:
 
   python manage.py migrate
 
-5. Crie um superusuário (opcional, para acessar o admin):
+4. Crie um superusuário (opcional, para acessar o admin):
    
   python manage.py createsuperuser
 
-6. Inicie o servidor de desenvolvimento:
+5. Inicie o servidor de desenvolvimento:
 
   python manage.py runserver
 
-7. Acesse o sistema em:
+6. Acesse o sistema em:
 
-  http://127.0.0.1:8000/
+  http://127.0.0.1:8000/admin ( para entrar como superuser )
+  http://127.0.0.1:8000/usuarios/login/ ( para logar em uma conta de Mentor )
+  http://127.0.0.1:8000/usuarios/cadastrar/ ( para criar uma conta de Mentor )
+  http://127.0.0.1:8000/mentorados/auth/ ( para ter acesso como Mentorado com o token de autenticação, gerado pelo Mentor )
+
 
 #Contribuição
 
